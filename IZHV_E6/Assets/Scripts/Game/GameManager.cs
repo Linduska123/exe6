@@ -166,12 +166,14 @@ public class GameManager : MonoBehaviour
 		 *       current URL ("OpenURL", "absoluteURL").
          */
        
-#if UNITY_EDITOR
-        // Quitting in Unity Editor: 
-#elif UNITY_WEBPLAYER
-        // Quitting in the WebGL build: 
-#else // !UNITY_WEBPLAYER
-        // Quitting in all other builds: 
-#endif
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #elif UNITY_WEBPLAYER
+            Application.OpenURL(Application.absoluteURL);
+        #elif UNITY_WEBGL
+            Application.OpenURL(Application.absoluteURL); // Reload the current URL
+        #else // !UNITY_WEBPLAYER
+            Application.Quit();
+        #endif
     }
 }

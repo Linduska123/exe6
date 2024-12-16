@@ -137,9 +137,23 @@ public class DebugMenuUI : MonoBehaviour
                     if (GUI.changed)
                     { InventoryManager.Instance.availableCurrency = currency; }
                  */
-                
-                
-                
+                GUILayout.BeginHorizontal();
+                {
+                    GUILayout.Label("Currency: ", GUILayout.Width(WINDOW_DIMENSION.x / 4.0f));
+
+              
+                    var currency = InventoryManager.Instance.availableCurrency;
+
+                 
+                    currency = (int)GUILayout.HorizontalSlider(currency, 0.0f, 1000.0f, GUILayout.ExpandWidth(true));
+
+              
+                    if (GUI.changed)
+                    {
+                        InventoryManager.Instance.availableCurrency = currency;
+                    }
+                }
+                GUILayout.EndHorizontal();
                 
                 
                 /*
@@ -166,7 +180,61 @@ public class DebugMenuUI : MonoBehaviour
                  */
                 
                 
-                
+                GUILayout.BeginVertical("box");
+                {
+                    
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Interactive Mode: ", GUILayout.Width(WINDOW_DIMENSION.x / 2.5f));
+
+                 
+                    if (GameManager.Instance != null)
+                    {
+                        bool interactiveMode = GameManager.Instance.interactiveMode;
+                        interactiveMode = GUILayout.Toggle(interactiveMode, "Enabled");
+                        GameManager.Instance.interactiveMode = interactiveMode;
+                    }
+                    else
+                    {
+                        GUILayout.Label("GameManager not found!");
+                    }
+                    GUILayout.EndHorizontal();
+
+                    // Master Volume Control
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Master Volume: ", GUILayout.Width(WINDOW_DIMENSION.x / 2.5f));
+
+                    // Check if SoundManager.Instance exists
+                    if (SoundManager.Instance != null)
+                    {
+                        float volume = SoundManager.Instance.masterVolume;
+                        volume = GUILayout.HorizontalSlider(volume, -80.0f, 20.0f, GUILayout.ExpandWidth(true));
+                        SoundManager.Instance.masterVolume = volume;
+
+                        GUILayout.Label($"{volume:F1} dB", GUILayout.Width(60));
+                    }
+                    else
+                    {
+                        GUILayout.Label("SoundManager not found!");
+                    }
+                    GUILayout.EndHorizontal();
+
+                    // Master Mute Toggle
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Sound Muted: ", GUILayout.Width(WINDOW_DIMENSION.x / 2.5f));
+
+                    if (SoundManager.Instance != null)
+                    {
+                        bool muted = SoundManager.Instance.masterMuted;
+                        muted = GUILayout.Toggle(muted, "Muted");
+                        SoundManager.Instance.masterMuted = muted;
+                    }
+                    else
+                    {
+                        GUILayout.Label("SoundManager not found!");
+                    }
+                    GUILayout.EndHorizontal();
+                }
+                GUILayout.EndVertical();
                 
                 
                 // Placing the elements next to each other.
@@ -193,10 +261,13 @@ public class DebugMenuUI : MonoBehaviour
                      * it was pressed. So, all you need to do is place the character-enabling
                      * code into the if statement and voila!
                      */
-                    if (GUILayout.Button("Enable\nDummy\nCharacter", 
-                        GUILayout.ExpandWidth(true), 
-                        GUILayout.ExpandHeight(true)))
-                    { /* Fill the code here! */ }
+                    if (GUILayout.Button("Enable\nDummy\nCharacter",
+                            GUILayout.ExpandWidth(true),
+                            GUILayout.ExpandHeight(true)))
+                        
+                    {
+                        GameManager.Instance.TogglePlayerCharacter();
+                    }
                 }
                 GUILayout.EndHorizontal();
                 // Do not forget to end each group in the correct order!
